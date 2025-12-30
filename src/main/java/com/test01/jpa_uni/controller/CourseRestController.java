@@ -20,9 +20,10 @@ public class CourseRestController {
             this.courseService = courseService;
         }
 
-        @GetMapping("/course/{id}")
-        public List<CourseDTO> getCoursesByInstructorId(@PathVariable int id) {
-            return courseService.findCoursesbyInstructorId(id);
+        @GetMapping("/course/{instructorId}")
+        public List<CourseDTO> getCoursesByInstructorId(@PathVariable int instructorId) {
+
+            return courseService.findCoursesbyInstructorId(instructorId);
         }
 
         @DeleteMapping("/course/{title}")

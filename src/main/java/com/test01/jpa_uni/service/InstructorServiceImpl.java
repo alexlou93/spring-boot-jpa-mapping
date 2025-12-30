@@ -174,4 +174,15 @@ public class InstructorServiceImpl implements InstructorService{
 
         instructorRepository.save(instructor);
     }
+
+    @Override
+    public List<CourseDTO> fetchCourseByInstructorId(int instructorId) {
+
+        Instructor instructor = instructorRepository.findById(instructorId).
+                orElseThrow(() -> new RuntimeException("Instructor not available : " +  + instructorId));
+
+
+
+        return List.of();
+    }
 }
