@@ -16,9 +16,9 @@ import java.util.List;
 @Service
 public class CourseServiceImpl implements CourseService{
 
-    private CourseRepository courseRepository;
+    private final CourseRepository courseRepository;
 
-    private InstructorRepository instructorRepository;
+    private final InstructorRepository instructorRepository;
 
     @Autowired
     public CourseServiceImpl(CourseRepository theCourseRepository, InstructorRepository instructorRepository){

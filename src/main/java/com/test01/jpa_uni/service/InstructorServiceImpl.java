@@ -20,7 +20,6 @@ import java.util.List;
 public class InstructorServiceImpl implements InstructorService{
 
 
-    private static final Logger log = LoggerFactory.getLogger(InstructorServiceImpl.class);
     private InstructorRepository instructorRepository;
 
     @Autowired
