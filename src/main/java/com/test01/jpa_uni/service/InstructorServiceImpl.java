@@ -6,6 +6,7 @@ import com.test01.jpa_uni.dto.InstructorDetailDTO;
 import com.test01.jpa_uni.entity.Course;
 import com.test01.jpa_uni.entity.Instructor;
 import com.test01.jpa_uni.entity.InstructorDetail;
+import com.test01.jpa_uni.exception.InstructorNotFoundException;
 import com.test01.jpa_uni.repository.InstructorRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,7 +76,7 @@ public class InstructorServiceImpl implements InstructorService{
 
         Instructor instructor =
                 instructorRepository.findById(id).
-                        orElseThrow(() -> new RuntimeException("Instructor not found" + id));
+                        orElseThrow(() -> new InstructorNotFoundException("Instructor not found : " + id));
 
 
         InstructorDTO instructorDTO = new InstructorDTO();
@@ -97,14 +98,19 @@ public class InstructorServiceImpl implements InstructorService{
         }
 
         // setting Courses
+        List<Course> courseList = instructor.getCourses();
 
         List<CourseDTO> courseDTOS = new ArrayList<>();
-        for(Course course : instructor.getCourses())
+
+        if(courseList!=null)
         {
-            CourseDTO dto = new CourseDTO();
-            dto.setId(course.getId());
-            dto.setTitle(course.getTitle());
-            courseDTOS.add(dto);
+            for(Course course : courseList)
+              {
+                   CourseDTO dto = new CourseDTO();
+                   dto.setId(course.getId());
+                   dto.setTitle(course.getTitle());
+                   courseDTOS.add(dto);
+              }
         }
 
         instructorDTO.setCourses(courseDTOS);
@@ -118,17 +124,15 @@ public class InstructorServiceImpl implements InstructorService{
     public void deleteInstructor(int id) {
 
         Instructor instructor =
-                instructorRepository.findById(id).orElse(null);
+                instructorRepository.findById(id).orElseThrow(()->
+                        new InstructorNotFoundException("Instructor not found : " + id));
 
-        if (instructor != null){
-
-            // detach course
-            for(Course course : instructor.getCourses()){
-                course.setInstructor(null);
-            }
-            System.out.println(instructor);
-            instructorRepository.delete(instructor);
+        // detach course
+        for(Course course : instructor.getCourses()){
+            course.setInstructor(null);
         }
+        System.out.println(instructor);
+        instructorRepository.delete(instructor);
     }
 
 
@@ -137,7 +141,7 @@ public class InstructorServiceImpl implements InstructorService{
     public void updateInstructor(int instructorId, InstructorDTO instructorDTO) {
 
         Instructor instructor = instructorRepository.findById(instructorId)
-                .orElseThrow(() -> new RuntimeException("Instructor not found..." + instructorId));
+                .orElseThrow(() -> new InstructorNotFoundException("Instructor not found..." + instructorId));
 
 
         // -------- Update Instructor Fields --------
@@ -174,14 +178,4 @@ public class InstructorServiceImpl implements InstructorService{
         instructorRepository.save(instructor);
     }
 
-    @Override
-    public List<CourseDTO> fetchCourseByInstructorId(int instructorId) {
-
-        Instructor instructor = instructorRepository.findById(instructorId).
-                orElseThrow(() -> new RuntimeException("Instructor not available : " +  + instructorId));
-
-
-
-        return List.of();
-    }
 }

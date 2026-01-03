@@ -17,6 +17,4 @@ public interface InstructorService{
 
     void updateInstructor(int instructorId, InstructorDTO instructorDTO);
 
-    List<CourseDTO> fetchCourseByInstructorId(int instructorId);
-
 }
